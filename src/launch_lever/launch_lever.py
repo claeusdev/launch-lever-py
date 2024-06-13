@@ -1,32 +1,30 @@
-from .toggle import Toggle
+from parsers.json_parser import JSONParser
 
 
 class LaunchLever:
-    def __init__(self, toggle_data, filename=None):
-        self.toggles = toggle_data
+    def __init__(self, filename="./toggles.json"):
         self.filename = filename
+        self._toggles = []
 
     @property
     def toggles(self):
         return self._toggles
 
-    @toggles.setter
-    def toggles(self, toggles):
-        self._toggles = toggles
+    def load_toggles(self):
+        self._toggles = JSONParser(self.filename).parse()
 
-    def _get_toggle(self, toggle_name):
-        toggle = {}
-        for t in self.toggles:
-            if t["name"] == toggle_name:
-                toggle = t
-        return Toggle(
-            name=toggle["name"],
-            description=toggle["description"],
-            status=toggle["status"],
-        )
+    def find(self, toggle_name):
+        for toggle in self._toggles:
+            if toggle.name == toggle_name:
+                return toggle
 
     def is_on(self, toggle_name):
-        toggle = self._get_toggle(toggle_name)
+        toggle = self.find(toggle_name)
         if not toggle:
             return False
         return toggle.status == "on"
+
+
+# lever = LaunchLever("./toggles.json")
+# lever.load_toggles()
+# print(lever.is_on("pfx_223"))
