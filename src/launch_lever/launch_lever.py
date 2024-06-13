@@ -10,7 +10,7 @@ class LaunchLever:
     def toggles(self):
         return self._toggles
 
-    def load_toggles(self):
+    def load(self):
         self._toggles = JSONParser(self.filename).parse()
 
     def find(self, toggle_name):
@@ -26,5 +26,5 @@ class LaunchLever:
 
 
 # lever = LaunchLever("./toggles.json")
-# lever.load_toggles()
+# lever.load()
 # print(lever.is_on("pfx_223"))
