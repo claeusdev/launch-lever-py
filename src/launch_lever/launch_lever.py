@@ -1,6 +1,11 @@
 from parsers.json_parser import JSONParser
 
 
+class Condition:
+    def __init__(self, role):
+        self.required_role = role
+
+
 class LaunchLever:
     def __init__(self, filename="./toggles.json"):
         self.filename = filename
@@ -10,21 +15,19 @@ class LaunchLever:
     def toggles(self):
         return self._toggles
 
-    def load(self):
+    def from_file(self, filename="./toggles.json"):
         self._toggles = JSONParser(self.filename).parse()
 
-    def find(self, toggle_name):
+    def get(self, toggle_name):
         for toggle in self._toggles:
             if toggle.name == toggle_name:
                 return toggle
 
-    def is_on(self, toggle_name):
+    def is_enabled(self, toggle_name):
         toggle = self.find(toggle_name)
-        if not toggle:
-            return False
-        return toggle.status == "on"
+        return toggle.is_enabled
 
 
 # lever = LaunchLever("./toggles.json")
-# lever.load()
+# lever.from_file()
 # print(lever.is_on("pfx_223"))
